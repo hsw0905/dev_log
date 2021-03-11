@@ -2,10 +2,10 @@ from .base import *
 
 DEBUG = False
 
-ENV = 'Staging'
+ENV = 'Production'
 
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS += []
 
-WSGI_APPLICATION = 'config.wsgi.staging.application'
+WSGI_APPLICATION = 'config.wsgi.production.application'
