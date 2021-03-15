@@ -22,4 +22,5 @@ from config import views
 urlpatterns = [
     path(config('ADMIN_ROUTE'), admin.site.urls),
     path('', views.index, name='index'),
+    path('test', views.login_test, name='login'),
 ]
