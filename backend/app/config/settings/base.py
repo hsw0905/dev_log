@@ -41,6 +41,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'webpack_loader',
+
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -150,3 +152,13 @@ AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME')
 AWS_STATIC_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
 AWS_AUTO_CREATE_BUCKET = True
 AWS_S3_SECURE_URLS = False
+
+AUTH_USER_MODEL = 'users.User'
+
+
+# Rest Framework
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+#     ),
+# }

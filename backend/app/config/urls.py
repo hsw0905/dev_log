@@ -15,12 +15,9 @@ Including another URLconf
 """
 from decouple import config
 from django.contrib import admin
-from django.urls import path
-
-from config import views
+from django.urls import path, include
 
 urlpatterns = [
     path(config('ADMIN_ROUTE'), admin.site.urls),
-    path('', views.index, name='index'),
-    path('test', views.login_test, name='login'),
+    path('api/', include('core.urls')),
 ]
