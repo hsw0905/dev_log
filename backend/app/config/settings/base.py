@@ -153,12 +153,12 @@ AWS_STATIC_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.a
 AWS_AUTO_CREATE_BUCKET = True
 AWS_S3_SECURE_URLS = False
 
+# Custom user
 AUTH_USER_MODEL = 'users.User'
 
-
 # Rest Framework
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-#     ),
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
