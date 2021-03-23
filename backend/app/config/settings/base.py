@@ -41,8 +41,10 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'webpack_loader',
+    'markdownx',
 
     'users',
+    'posts',
 ]
 
 MIDDLEWARE = [
@@ -161,4 +163,20 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+}
+
+# Markdownx
+MARKDOWNX_MARKDOWN_EXTENSIONS = [
+    'markdown.extensions.extra',
+    'markdown.extensions.toc',
+    'markdown.extensions.codehilite',
+    'markdown.extensions.fenced_code',
+]
+
+MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
+    'markdown.extensions.codehilite': {
+        'linenums': True,
+        'use_pygments': True,
+        'noclasses': True
+    }
 }
