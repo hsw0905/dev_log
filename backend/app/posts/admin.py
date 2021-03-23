@@ -8,6 +8,8 @@ from posts.models import Post
 class PostAdmin(MarkdownxModelAdmin):
     list_display = ('id',
                     'author',
+                    'title',
+                    'description',
                     'content',
                     'time_stamp',)
 
