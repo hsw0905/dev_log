@@ -7,32 +7,31 @@ module.exports = {
   chainWebpack: config => {
 
     config
-        .plugin('BundleTracker')
-        .use(BundleTracker, [{filename: './webpack-stats.json'}])
+      .plugin('BundleTracker')
+      .use(BundleTracker, [{filename: './webpack-stats.json'}])
 
     config.output
-        .filename('bundle.js')
+      .filename('bundle.js')
 
     config.optimization
-        .splitChunks(false)
+      .splitChunks(false)
 
     config.resolve.alias
-        .set('__STATIC__', 'static')
+      .set('__STATIC__', 'static')
 
     config.devServer
-        // the first 3 lines of the following code have been added to the configuration
-        .public('http://127.0.0.1:8080')
-        .host('127.0.0.1')
-        .port(8080)
-        .hotOnly(true)
-        .watchOptions({poll: 1000})
-        .https(false)
-        .disableHostCheck(true)
-        .headers({"Access-Control-Allow-Origin": ["\*"]})
+      .public('http://127.0.0.1:8080')
+      .host('127.0.0.1')
+      .port(8080)
+      .hotOnly(true)
+      .watchOptions({poll: 1000})
+      .https(false)
+      .disableHostCheck(true)
+      .headers({"Access-Control-Allow-Origin": ["*"]})
 
   },
 
-  // uncomment before executing 'npm run build'
+  // 아래 주석 코드는 배포작업(npm run build) 하기 전 해제한다
   // css: {
   //     extract: {
   //       filename: 'bundle.css',

@@ -505,3 +505,11 @@ backend/deploy.py
 
 # docker-compose.yml
 docker-compose.yml
+
+# local env files
+.env.local
+.env.*.local
+
+# dist/
+/dist
+dist/
