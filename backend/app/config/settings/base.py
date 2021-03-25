@@ -18,6 +18,8 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # ~/dev_log/backend/
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent.parent
+# ~/dev_log/
+PROJECT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent.parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -137,8 +139,14 @@ USE_TZ = True
 # Static Setting
 STATIC_URL = '/static/'
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATIC_FRONTEND_ASSETS_DIR = os.path.join(PROJECT_DIR, 'frontend/assets')
+STATIC_FRONTEND_DIST_DIR = os.path.join(PROJECT_DIR, 'frontend/dist')
 STATIC_ROOT = os.path.join(ROOT_DIR, 'static')
-STATICFILES_DIRS = [STATIC_DIR, ]
+STATICFILES_DIRS = [
+    STATIC_DIR,
+    STATIC_FRONTEND_ASSETS_DIR,
+    STATIC_FRONTEND_DIST_DIR,
+]
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Media Setting
@@ -178,5 +186,13 @@ MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
         'linenums': True,
         'use_pygments': True,
         'noclasses': True
+    }
+}
+
+# WebPack Loader
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'dist/',
+        'STATS_FILE': os.path.join(PROJECT_DIR, 'frontend', 'webpack-stats.json'),
     }
 }

@@ -17,8 +17,11 @@ from decouple import config
 from django.contrib import admin
 from django.urls import path, include
 
+from core.views import IndexTemplateView
+
 urlpatterns = [
     path(config('ADMIN_ROUTE'), admin.site.urls),
     path('api/', include('core.urls')),
     path('markdownx/', include('markdownx.urls')),
+    path('', IndexTemplateView.as_view(), name='home')
 ]
