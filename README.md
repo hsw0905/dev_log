@@ -393,3 +393,212 @@ urlpatterns = [
 ```bash
 python manage.py collectstatic
 ```
+
+
+## Frontend
+
+### Vue와 django 연결
+
+- django
+
+```bash
+pip install django-webpack-loader
+```
+
+```python
+INSTALLED_APPS = (
+    ...
+    'webpack_loader',
+)
+
+# WebPack Loader
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'dist/',
+        'STATS_FILE': os.path.join(PROJECT_DIR, 'frontend', 'webpack-stats.json'),
+    }
+}
+```
+
+```python
+# Template에 적용할 때 예시
+{% load render_bundle from webpack_loader %}
+
+{% render_bundle 'app' %}
+```
+
+- 위 설정을 보면 webpack-stats.json이라는 파일에서 파일을 참고하는데, 그 파일은 프론트엔드에서 별도로 설치해야 함
+
+- Vue.js 외에 추가로 설치 (장고에서 화면을 보기 위함)
+
+```bash
+# 주의사항 : 현재기준(2021.03) 최신 버전(1.0.0 alpha)은 오류가 있어서 0.4.3 버전을 설치해야 함 
+npm install --save-dev webpack-bundle-tracker@0.4.3
+```
+
+- 웹팩 설정 예시
+
+```jsx
+// vue.config.js
+
+const BundleTracker = require("webpack-bundle-tracker");
+
+module.exports = {
+  publicPath: "http://0.0.0.0:8080/",
+  outputDir: './dist/',
+
+  chainWebpack: config => {
+
+    config
+        .plugin('BundleTracker')
+        .use(BundleTracker, [{filename: './webpack-stats.json'}])
+
+    config.output
+        .filename('bundle.js')
+
+    config.optimization
+        .splitChunks(false)
+
+    config.resolve.alias
+        .set('__STATIC__', 'static')
+
+    config.devServer
+        .public('http://127.0.0.1:8080')
+        .host('127.0.0.1')
+        .port(8080)
+        .hotOnly(true)
+        .watchOptions({poll: 1000})
+        .https(false)
+        .disableHostCheck(true)
+        .headers({"Access-Control-Allow-Origin": ["\*"]})
+
+  },
+
+  // 아래 주석 코드는 배포작업(npm run build) 하기 전 해제한다
+  // css: {
+  //     extract: {
+  //       filename: 'bundle.css',
+  //       chunkFilename: 'bundle.css',
+  //     },
+  // }
+
+};
+```
+
+- 설정 후 프론트 띄우기
+
+```bash
+npm run serve
+```
+
+- 이후에  webpack-stats.json 가 생성된 것을 확인
+- 장고에서 스태틱 디렉토리 추가 설정 예시
+
+```python
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATIC_FRONTEND_ASSETS_DIR = os.path.join(PROJECT_DIR, 'frontend/assets')
+STATIC_FRONTEND_DIST_DIR = os.path.join(PROJECT_DIR, 'frontend/dist')
+STATIC_ROOT = os.path.join(ROOT_DIR, 'static')
+STATICFILES_DIRS = [
+    STATIC_DIR,
+    STATIC_FRONTEND_ASSETS_DIR,
+    STATIC_FRONTEND_DIST_DIR,
+]
+```
+
+- 화면 테스트를 위한 코드 (홈 화면에 표시)
+
+```python
+# views.py
+from django.conf import settings
+from django.views.generic import TemplateView
+
+class IndexTemplateView(TemplateView):
+
+    def get_template_names(self):
+				# dev 설정, production 설정 구분
+        if settings.DEBUG:
+            template_name = "index-dev.html"
+        else:
+            template_name = "index.html"
+        return template_name
+
+# urls.py
+urlpatterns = [
+		...
+    path('', IndexTemplateView.as_view(), name='home')
+]
+```
+```html
+<!-- Templates 예시-->
+# base.html
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Balsamiq+Sans">
+
+    {% block style %}
+    {% endblock %}
+</head>
+<body>
+        {% block content %}
+        {% endblock %}
+
+        {% block js %}
+        {% endblock %}
+</body>
+</html>
+
+
+<!--index-dev.html (dev mode)-->
+
+{% extends 'base.html' %}
+{% load render_bundle from webpack_loader %}
+
+{% block content %}
+<noscript>
+    <strong>We're sorry but frontend doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+</noscript>
+<div id="app"></div>
+
+<!-- built files will be auto injected -->
+{% render_bundle 'app' %}
+{% endblock %}
+
+
+<!--index.html (production mode)-->
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block style %}
+    <link type="text/css" href="{% static 'bundle.css' %}">
+{% endblock %}
+
+{% block content %}
+<noscript>
+    <strong>We're sorry but frontend doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+</noscript>
+<div id="app"></div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="{% static 'bundle.js' %}"></script>
+{% endblock %}
+```
+
+- vue, django 모두 run 후 확인
+
+```bash
+# frontend
+npm run serve
+
+# backend
+python manage.py runserver
+
+# django runserver 화면에서 frontend 잘 보이는지 확인
+```
