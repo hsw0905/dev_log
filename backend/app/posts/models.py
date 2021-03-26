@@ -10,5 +10,8 @@ class Post(models.Model):
     content = MarkdownxField()
     time_stamp = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-id']
+
     def formatted_markdown(self):
         return markdownify(self.content)
