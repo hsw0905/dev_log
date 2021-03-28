@@ -83,6 +83,7 @@ server {
     ssl_certificate         /etc/letsencrypt/live/hswlog.dev/fullchain.pem;
     ssl_certificate_key     /etc/letsencrypt/live/hswlog.dev/privkey.pem;
 		
+		# 장고에서 static file 서빙할 경우
 		# https(443번포트)로 요청이 왔을때
     location / {
         include             /etc/nginx/proxy_params;
@@ -98,6 +99,26 @@ server {
     }
 
 }
+```
+```bash
+    # ...
+    # endpoint로 나눌 경우
+    # 컨테이너로 front, backend 한번에 올릴 경우 frontend build 파일도 copy 해야 함
+    # 반대로 frontend, backend 둘로 컨테이너 따로 만들고 docker-compose로 작업시
+    # upstream 이용할 수도 있다
+    location / {
+        # Frontend : npm run build 결과물 예시
+        root /srv/frontend/dist;
+        index index.html index.htm;
+        # SPA 설정
+        try_files $uri $uri/ /index.html;
+    }
+
+
+    location /api {
+        include             /etc/nginx/proxy_params;
+        proxy_pass          http://unix:/run/dev_log.sock;
+    }
 ```
 
 - gunicorn.py
