@@ -29,6 +29,7 @@ munch = "^2.5.0"
 Pygments = "^2.8.1"
 django-markdownx = "^3.0.1"
 model-bakery = "^1.2.1"
+django-cors-headers = "^3.7.0"
 
 [tool.poetry.dev-dependencies]
 

@@ -12,6 +12,8 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS += []
 
 MIDDLEWARE = [
+    # django-cors-header
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     # whitenoise for production
     'whitenoise.middleware.WhiteNoiseMiddleware',

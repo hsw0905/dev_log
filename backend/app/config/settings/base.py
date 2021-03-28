@@ -44,12 +44,15 @@ INSTALLED_APPS = [
     'rest_framework',
     'webpack_loader',
     'markdownx',
+    'corsheaders',
 
     'users',
     'posts',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -139,13 +143,9 @@ USE_TZ = True
 # Static Setting
 STATIC_URL = '/static/'
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
-STATIC_FRONTEND_ASSETS_DIR = os.path.join(PROJECT_DIR, 'frontend/assets')
-STATIC_FRONTEND_DIST_DIR = os.path.join(PROJECT_DIR, 'frontend/dist')
 STATIC_ROOT = os.path.join(ROOT_DIR, 'static')
 STATICFILES_DIRS = [
     STATIC_DIR,
-    STATIC_FRONTEND_ASSETS_DIR,
-    STATIC_FRONTEND_DIST_DIR,
 ]
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
@@ -192,7 +192,17 @@ MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
 # WebPack Loader
 WEBPACK_LOADER = {
     'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'dist/',
+        'BUNDLE_DIR_NAME': '/',
         'STATS_FILE': os.path.join(PROJECT_DIR, 'frontend', 'webpack-stats.json'),
     }
 }
+
+# CORS Headers
+CORS_ALLOW_ALL_ORIGINS = False
+
+CORS_ALLOWED_ORIGINS = [
+    config('CORS_ORIGIN_WHITE_ENTRY_1'),
+    config('CORS_ORIGIN_WHITE_ENTRY_2'),
+    config('CORS_ORIGIN_WHITE_ENTRY_3'),
+    config('CORS_ORIGIN_WHITE_ENTRY_4'),
+]
