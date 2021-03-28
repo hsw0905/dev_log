@@ -1,7 +1,7 @@
 const BundleTracker = require('webpack-bundle-tracker');
 
 module.exports = {
-	publicPath: 'http://0.0.0.0:8080/',
+	publicPath: '',
 	outputDir: './dist/',
 
 	chainWebpack: config => {
@@ -27,10 +27,10 @@ module.exports = {
 	},
 
 	// 아래 주석 코드는 배포작업(npm run build) 하기 전 해제한다
-	// css: {
-	//     extract: {
-	//       filename: 'bundle.css',
-	//       chunkFilename: 'bundle.css',
-	//     },
-	// }
+	css: {
+		extract: {
+			filename: 'bundle.css',
+			chunkFilename: 'bundle.css',
+		},
+	},
 };
